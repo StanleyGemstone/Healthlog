@@ -1,0 +1,32 @@
+.header {
+    grid-area: header;
+    height: 60px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 0 30px 0 30px;
+    box-shadow: 0 6px 7px -3px rgba(0, 0, 0, 0.35);
+  }
+  
+  .menu-icon {
+    display: none;
+  }
+
+  .nav-item {
+    margin: 0 20px 0 20px;
+    color: #fff;
+    text-decoration: none;
+  }
+
+  .nav-item:hover {
+    font-weight: 700;
+    background-color: #ffffff79;
+    color: #1d2634;
+    padding: 5px;
+    border-radius: 10px;
+  }
+
+  .header-left {
+    font-weight: 700;
+    font-size: 30px;
+  }
