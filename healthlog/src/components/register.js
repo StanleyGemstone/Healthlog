@@ -44,7 +44,7 @@ function Register () {
 
     const handleSubmit = (event) => {
         event.preventDefault();
-        axios.post('http://localhost:3001/api/Hospitals/add', values)
+        axios.post('http://localhost:3001/Hospitals', values)
         .then(res => console.log("Registered Succesfully!!!"))
         .catch(err => console.log(err));
         };
@@ -52,11 +52,17 @@ function Register () {
     const typePassword = (e) => {
         setPassword(e.target.value);
     }
+    // Password input onChanges
+    const allPasswordOnchange = (e) => {
+        handleChange(e);
+        typePassword(e);
+    } 
 
-    const allPasswordOnchange   = (e, event) => {
-        handleChange(event);
-        typePassword(e.);
-    }  
+    // All phone number input onChange
+    const allPhoneNumberOnchange = (e) => {
+        handlePhoneNumberInputChange(e);
+        handleChange(e);
+    }
     return (
         <>
         <Navs />
@@ -64,14 +70,14 @@ function Register () {
             <div className="p-3 wrapper">
                 <form action="" className="form" onSubmit={handleSubmit}> 
                     <h1>Register HealthLog</h1>
-                    
+
                     <div className="mb-3 input-box">
                         <input type="text" placeholder="Hospital Name" name='hos_name' required onChange={handleChange}/>
                         <BsPerson className="icon" />
                     </div>
 
                     <div className="mb-3 input-box">
-                        <input type="textarea" placeholder="Hospital Address" name='hos_address' required onChange={handleChange}/>
+                        <input type="text" placeholder="Hospital Address" name='hos_address' required onChange={handleChange}/>
                         <BsHospital className="icon"/>
                     </div>
 
@@ -86,7 +92,7 @@ function Register () {
                                 type="tel"
                                 placeholder="Telephone"
                                 pattern="[0-9]{11}"
-                                onChange={(e) => handlePhoneNumberInputChange(index, e.target.value)}
+                                onChange={ allPhoneNumberOnchange }
                                 value={phoneNumber}
                                 name='hos_telephone'
                                 required />

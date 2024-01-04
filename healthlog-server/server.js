@@ -5,8 +5,6 @@ const bcrypt = require('bcrypt');
 const validator = require('validator');
 
 const app = express();
-
-
 const PORT = process.env.PORT || 3001;
 
 // Create mysql connection
@@ -28,11 +26,11 @@ db.connect((err) => {
 });
 
 // Middleware to parse JSON in requests
-// app.use(express.json());
+app.use(express.json());
 app.use(cors());
 
-// Retrievae Hospitals Logic
-/* app.get('api/Hospitals', (req, res) => {
+// Retrieve Hospitals Logic
+app.get('/Hospitals', (req, res) => {
     const sql = 'SELECT * FROM Hospitals';
 
     db.query(sql, (err, result) => {
@@ -42,27 +40,39 @@ app.use(cors());
         }
         res.status(200).json(result);
     });
-}); */
+});
 
 // Add Hospital logic
-app.post('/Hospitals', (req, res) => {
+app.post('/Hospitals', async (req, res) => {
     // validate inputs
-    /* if (!validator.isEmail(hos_email) || !validator.isMobilePhone(hos_telephone, 'any', { strictMode: false })) {
+    if (!validator.isEmail(req.body.hos_email) || !validator.isMobilePhone(req.body.hos_telephone, 'any', { strictMode: false })) {
         return res.status(400).json({ error: 'Invalid input data' });
-    } */
-    const sql = "INSERT INTO Hospitals ('hos_name', 'hos_address', 'hos_email', 'hos_telephone', 'password') Values (?)";
+    }
+    try {
+        // Hash the password
+        const hashedPassword = await bcrypt.hash(req.body.password, 10);
+        
+        const sql = "INSERT INTO Hospitals (hos_name, hos_address, hos_email, hos_telephone, password) Values (?, ?, ?, ?, ?)";
 
-    const values = [
-        req.body.hos_name,
-        req.body.hos_address,
-        req.body.hos_email,
-        req.body.hos_telephone,
-        req.body.password
-        ]
-        db.query(sql, [values], (err, data) => {
-            if (err) return res.json(err);
-            return res.json(data);
-    });
+        const values = [
+            req.body.hos_name,
+            req.body.hos_address,
+            req.body.hos_email,
+            req.body.hos_telephone,
+            req.body.password
+            ];
+
+        db.query(sql, values, (err, data) => {
+            if (err) {
+                console.error(err);
+                return res.status(500).json({ error: 'Internal Server Error'});
+            }    
+            return res.status(201).json(data);
+        });
+    } catch (error) {
+        console.error(error);
+        return res.status(500).json({ error: 'Internal Server Error' })
+    }
 });
 // Start the server
 app.listen(PORT, () => {
