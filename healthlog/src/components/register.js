@@ -7,7 +7,7 @@ import 'bootstrap/dist/css/bootstrap.min.css';
 import '../styles/register.css'
 
 function Register () {
-    const [showPassword, setShowPassword] = useState(true);
+    const [showPassword, setShowPassword] = useState(false);
     const [password, setPassword] = useState('');
 
     const [phoneNumbers, setPhoneNumbers] = useState(['']);
@@ -48,8 +48,15 @@ function Register () {
         .then(res => console.log("Registered Succesfully!!!"))
         .catch(err => console.log(err));
         };
+    
+    const typePassword = (e) => {
+        setPassword(e.target.value);
+    }
 
-
+    const allPasswordOnchange   = (e, event) => {
+        handleChange(event);
+        typePassword(e.);
+    }  
     return (
         <>
         <Navs />
@@ -57,18 +64,22 @@ function Register () {
             <div className="p-3 wrapper">
                 <form action="" className="form" onSubmit={handleSubmit}> 
                     <h1>Register HealthLog</h1>
+                    
                     <div className="mb-3 input-box">
                         <input type="text" placeholder="Hospital Name" name='hos_name' required onChange={handleChange}/>
                         <BsPerson className="icon" />
                     </div>
+
                     <div className="mb-3 input-box">
                         <input type="textarea" placeholder="Hospital Address" name='hos_address' required onChange={handleChange}/>
                         <BsHospital className="icon"/>
                     </div>
+
                     <div className="mb-3 input-box">
                         <input type="email" placeholder="Hospital Email" name='hos_email'required onChange={handleChange}/>
                         <BsEnvelope className="icon"/>
                     </div>
+
                     {phoneNumbers.map((phoneNumber, index) => (
                         <div className="mb-3 input-box" key={index}>
                             <input
@@ -81,10 +92,12 @@ function Register () {
                                 required />
                             <BsTelephone className="icon"/>
                         </div>
-                    ))}    
+                    ))}
+
                     <div className="addTel">
                         <p className="addPhone" onClick={handleAddPhoneNumber}>Add Another Phone</p>
                     </div>
+
                     <div className="mb-3 input-box">
                         <input
                             type={showPassword ? "text" : "password"}
@@ -93,12 +106,13 @@ function Register () {
                             required
                             name='password'
                             pattern="^(?=.*[A-Za-z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,}$"
-                            onChange={(e) => setPassword(e.target.value)}/>
+                            onChange={ allPasswordOnchange }/>
                     {password ? (        
                         <div onClick={() => setShowPassword(!showPassword)}>
                             {showPassword ? <BsEyeSlashFill className="icon"/> : <BsEyeFill className="icon"/>}
                         </div>) : (<BsKeyFill className="icon"/>)}    
                     </div>
+
                     <button className="btn btn-success" type="submit" onClick={handleSubmit}>Register</button>
                     <div className="register-link">
                         <p>Already Have an Account? <Link to="/login" className="register">Login</Link></p>
