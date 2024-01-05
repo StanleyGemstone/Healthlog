@@ -2,7 +2,7 @@ import React from 'react';
 import { Link } from 'react-router-dom';
 // import { FontAwesomeIcom } from '@fortawesome/react-fontawesome';
 // import { FaNotesMedical } from '@fortawesome/free-sold-svg-icons';
-import {BsFillBellFill, BsFillEnvelopeFill, BsPersonCircle, BsSearch, BsJustify} from 'react-icons/bs';
+import { BsPersonCircle, BsSearch, BsJustify} from 'react-icons/bs';
 import '../styles/navbar.css';
 
 function Navs (OpenSidebar) {
