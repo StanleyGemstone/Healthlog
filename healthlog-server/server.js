@@ -1,6 +1,6 @@
 const express = require('express');
 const mysql = require('mysql');
-const cors = require('cors');
+// const cors = require('cors');
 const bcrypt = require('bcrypt');
 const validator = require('validator');
 
@@ -13,21 +13,21 @@ const db = mysql.createConnection({
     user: 'healthlog',
     password: 'health',
     database: 'HealthLog',
-    socketPath: '/var/run/mysqld/mysqld.sock',
 });
+
+// Middleware to parse JSON in requests
+app.use(express.json());
+//app.use(cors());
 
 // Connect to mysql
 db.connect((err) => {
     if (err) {
         console.error('Error connecting to Database:', err);
-        throw err;
+        throw (err);
     }
     console.log('Connected to database');
 });
 
-// Middleware to parse JSON in requests
-app.use(express.json());
-app.use(cors());
 
 // Retrieve Hospitals Logic
 app.get('/Hospitals', (req, res) => {
@@ -59,7 +59,7 @@ app.post('/Hospitals', async (req, res) => {
             req.body.hos_address,
             req.body.hos_email,
             req.body.hos_telephone,
-            req.body.password
+            hashedPassword
             ];
 
         db.query(sql, values, (err, data) => {

@@ -16,7 +16,7 @@ function Register () {
     // toggle password visibility
     const togglePasswordVisibility = () => {
         setShowPassword(!showPassword);
-    }
+    };
 
     // Add more Phone number
     const handleAddPhoneNumber = () => {
@@ -27,42 +27,64 @@ function Register () {
         const newNumbers = [...phoneNumbers];
         newNumbers[index] = value;
         setPhoneNumbers(newNumbers);
-    }
+    };
 
     // connecting to nodejs
     const [values, setValues] = useState({
-        hos_name: '',
-        hos_address: '',
         hos_email: '',
-        hos_telephone: '',
+        hos_address: '',
         password: '',
+        hos_name: '',
+        hos_telephone: '',
     });
 
     const handleChange = (event) => {
-       setValues({...values, [event.target.name]:[event.target.value]})
+       setValues({...values, [event.target.name]:event.target.value })
     };
 
     const handleSubmit = (event) => {
         event.preventDefault();
-        axios.post('http://localhost:3001/Hospitals', values)
-        .then(res => console.log("Registered Succesfully!!!"))
-        .catch(err => console.log(err));
-        };
+        axios.post('https://authentication-system-sai8.onrender.com/api/auth/signup', values)
+        .then((res) => {
+            console.log('Registered Successfully!!!');
+            setValues({
+                hos_email: '',
+                hos_address: '',
+                password: '',
+                hos_name: '',
+                hos_telephone: '',
+        });
+    })
+    .catch((error) => {
+        if (error.response) {
+          // The request was made and the server responded with a status code
+          // that falls out of the range of 2xx
+          console.error('Registration failed with status:', error.response.status);
+          
+          if (error.response.status === 400) {
+            // Display a user-friendly message for a Bad Request
+            alert('Invalid registration data. Please check your input and try again.');
+          } else if (error.response.status === 401) {
+            alert('Unauthorized: Invalid credentials.');
+          } else {
+            alert('Registration failed. Please try again later.');
+          }
+        } else if (error.request) {
+          // The request was made but no response was received
+          console.error('No response received:', error.request);
+          alert('No response received. Please check your internet connection.');
+        } else {
+          // Something happened in setting up the request that triggered an Error
+          console.error('Request setup error:', error.message);
+          alert('An error occurred during registration. Please try again later.');
+        }
+      });      
+};
     
     const typePassword = (e) => {
         setPassword(e.target.value);
     }
-    // Password input onChanges
-    const allPasswordOnchange = (e) => {
-        handleChange(e);
-        typePassword(e);
-    } 
-
-    // All phone number input onChange
-    const allPhoneNumberOnchange = (e) => {
-        handlePhoneNumberInputChange(e);
-        handleChange(e);
-    }
+      
     return (
         <>
         <Navs />
@@ -89,10 +111,10 @@ function Register () {
                     {phoneNumbers.map((phoneNumber, index) => (
                         <div className="mb-3 input-box" key={index}>
                             <input
-                                type="tel"
+                                type="text"
                                 placeholder="Telephone"
-                                pattern="[0-9]{11}"
-                                onChange={ allPhoneNumberOnchange }
+                                
+                                onChange={(e) => handlePhoneNumberInputChange(index, e.target.value) }
                                 value={phoneNumber}
                                 name='hos_telephone'
                                 required />
@@ -112,14 +134,14 @@ function Register () {
                             required
                             name='password'
                             pattern="^(?=.*[A-Za-z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,}$"
-                            onChange={ allPasswordOnchange }/>
+                            onChange={ typePassword }/>
                     {password ? (        
                         <div onClick={() => setShowPassword(!showPassword)}>
                             {showPassword ? <BsEyeSlashFill className="icon"/> : <BsEyeFill className="icon"/>}
                         </div>) : (<BsKeyFill className="icon"/>)}    
                     </div>
 
-                    <button className="btn btn-success" type="submit" onClick={handleSubmit}>Register</button>
+                    <button className="btn btn-success" type="submit" >Register</button>
                     <div className="register-link">
                         <p>Already Have an Account? <Link to="/login" className="register">Login</Link></p>
                     </div>
@@ -129,4 +151,5 @@ function Register () {
         </>
     );
 };
+
 export default Register;
